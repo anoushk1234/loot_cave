@@ -48,6 +48,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
             FlatButton.icon(
               onPressed: (){
                 //nav
+                Navigator.of(context).pushNamed('/git');
               },
               icon: Icon(FontAwesomeIcons.github,color: Colors.white,),
               label: Text(
@@ -58,20 +59,6 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 15.0,),
-            FlatButton.icon(
-              icon: Icon(Icons.image, color: Colors.white,),
-              label: Text(
-                "Photos",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 21.0,
-                ),
-              ),
-              onPressed: (){
-                //Navigator.pushNamed(context, '/photos');
-              },
-            )
           ],
         ),
       ),

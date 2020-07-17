@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:http/http.dart';
@@ -18,9 +19,9 @@ class _HomeScreenState extends State<HomeScreen> {
       topLeft: Radius.circular((30)), topRight: Radius.circular(30));
   int _value = 0;
   int _value1 = 0;
-  List<int> inputs = new List();
+  List<int> inputs = [];
   String cavegold = '';
-  int numberofcaves = 1;
+  int numberofcaves = 0;
   int limit = 0;
   int lootsum = 0;
   int lootsum1 = 0;
@@ -28,9 +29,11 @@ class _HomeScreenState extends State<HomeScreen> {
   List outputs = [];
   List outputs1 = [];
   List outputs2 = [];
-  List indexlist = [ ];
-  List indexlist1 = [ ];
-  List indexlist2 = [ ];
+  List indexlist = [];
+  List indexlist1 = [];
+  List indexlist2 = [];
+  int temp = 0;
+
   /*Widget CaveGold() {
     String cavegold = "";
     for (int index = 0; index < 10; index++) {
@@ -105,7 +108,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     scrollDirection: Axis.horizontal,
                     itemCount: numberofcaves,
                     itemBuilder: (context, index) {
-                      int temp = inputs[index];
+                      if (inputs.length >= 1) {
+                        temp = inputs[index];
+                      }
                       return (indexlist.contains(index))
                           ? Container(
                               margin: EdgeInsets.all(15),
@@ -206,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       shape: BoxShape.rectangle,
                                     ),
                                   ),
-                                 // Text("Some random stuff about the cave.",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25),),
+                                  // Text("Some random stuff about the cave.",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25),),
                                 ],
                               ),
                             );
@@ -225,24 +230,24 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: Center(
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Text(
-                '$lootsum',
-                style: TextStyle(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Text(
+                    '$lootsum',
+                    style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                         fontSize: 40),
-              ),
-                      Text(
-                        '$indexlist',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            fontSize: 40),
-                      ),
-                    ],
-                  )),
+                  ),
+                  Text(
+                    '$indexlist',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: 40),
+                  ),
+                ],
+              )),
             )
           ]),
           SlidingUpPanel(
@@ -463,6 +468,25 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 10,bottom: 5),
+                          child: ButtonTheme(
+                            height: 35,
+                            minWidth: 90,
+                            child: RaisedButton(
+                              color: Colors.white,
+                              elevation: 3,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  side: BorderSide(color: Colors.transparent)),
+                              onPressed: () => Phoenix.rebirth(context),
+                              child: Text(
+                                "Refresh",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -480,65 +504,60 @@ class _HomeScreenState extends State<HomeScreen> {
                           lootsum = 0;
                           lootsum1 = 0;
                           lootsum2 = 0;
-                          for (int i = 0; i < inputs.length; i++){
+                          for (int i = 0; i < inputs.length; i++) {
                             lootsum1 += inputs[i];
                             outputs1.add(inputs[i]);
                             indexlist1.add(i);
-                            if(i+4 < inputs.length){
-                              if((inputs[i+4]+inputs[i+2]) >= inputs[i+3]){
-                                i+= 1;
+                            if (i + 4 < inputs.length) {
+                              if ((inputs[i + 4] + inputs[i + 2]) >=
+                                  inputs[i + 3]) {
+                                i += 1;
+                              } else if ((inputs[i + 4] + inputs[i + 2]) <
+                                  inputs[i + 3]) {
+                                i += 2;
                               }
-                              else if((inputs[i+4]+inputs[i+2]) < inputs[i+3]){
-                                i+= 2;
+                            } else if (i + 3 < inputs.length) {
+                              if (inputs[i + 2] >= inputs[i + 3]) {
+                                i += 1;
+                              } else if (inputs[i + 2] < inputs[i + 3]) {
+                                i += 2;
                               }
-                            }
-                            else if(i+3 < inputs.length){
-                              if(inputs[i+2] >= inputs[i+3]){
-                                i+= 1;
-                              }
-                              else if(inputs[i+2] < inputs[i+3]){
-                                i+= 2;
-                              }
-                            }
-                            else if(i+2 < inputs.length){
-                              i+= 1;
-                            }
-                            else{
+                            } else if (i + 2 < inputs.length) {
+                              i += 1;
+                            } else {
                               break;
                             }
                           }
-                          for (int i = 1; i < inputs.length; i++){
+                          for (int i = 1; i < inputs.length; i++) {
                             lootsum2 += inputs[i];
                             outputs2.add(inputs[i]);
                             indexlist2.add(i);
-                            if(i+4 < inputs.length){
-                              if((inputs[i+4]+inputs[i+2]) >= inputs[i+3]){
-                                i+= 1;
+                            if (i + 4 < inputs.length) {
+                              if ((inputs[i + 4] + inputs[i + 2]) >=
+                                  inputs[i + 3]) {
+                                i += 1;
+                              } else if ((inputs[i + 4] + inputs[i + 2]) <
+                                  inputs[i + 3]) {
+                                i += 2;
                               }
-                              else if((inputs[i+4]+inputs[i+2]) < inputs[i+3]){
-                                i+= 2;
+                            } else if (i + 3 < inputs.length) {
+                              if (inputs[i + 2] >= inputs[i + 3]) {
+                                i += 1;
+                              } else if (inputs[i + 2] < inputs[i + 3]) {
+                                i += 2;
                               }
-                            }
-                            else if(i+3 < inputs.length){
-                              if(inputs[i+2] >= inputs[i+3]){
-                                i+= 1;
-                              }
-                              else if(inputs[i+2] < inputs[i+3]){
-                                i+= 2;
-                              }
-                            }
-                            else if(i+2 < inputs.length){
-                              i+= 1;
-                            }
-                            else{
+                            } else if (i + 2 < inputs.length) {
+                              i += 1;
+                            } else {
                               break;
                             }
                           }
-                          lootsum = (lootsum1>lootsum2)?lootsum1:lootsum2;
-                          outputs = (lootsum1>lootsum2)?outputs1:outputs2;
-                          indexlist = (lootsum1>lootsum2)?indexlist1:indexlist2;
+                          lootsum = (lootsum1 > lootsum2) ? lootsum1 : lootsum2;
+                          outputs = (lootsum1 > lootsum2) ? outputs1 : outputs2;
+                          indexlist =
+                              (lootsum1 > lootsum2) ? indexlist1 : indexlist2;
                           print(lootsum);
-                          print (outputs);
+                          print(outputs);
                           print(indexlist);
                         });
                       },
