@@ -31,7 +31,6 @@ class _LoadingState extends State<Loading> with SingleTickerProviderStateMixin {
     animationController.forward();
 
   }
-
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
